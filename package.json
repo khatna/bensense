@@ -1,0 +1,27 @@
+{
+  "name": "bensense",
+  "version": "1.0.0",
+  "description": "Notifies user via SMS whenever Ben Simmons achieves a triple double. (Plans to extend to any player)",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://www.github.com/khatna/bensense"
+  },
+  "keywords": [
+    "ben",
+    "simmons",
+    "triple",
+    "double",
+    "nba",
+    "sixers"
+  ],
+  "author": "Khatna bold",
+  "license": "ISC",
+  "dependencies": {
+    "request": "^2.88.0",
+    "request-promise": "^4.2.2"
+  }
+}
