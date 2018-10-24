@@ -1,3 +1,8 @@
+/*
+Khatna Bold
+Real Time Triple Double Information
+*/
+
 var rp = require("request-promise");
 
 var todayDate = new Date();
