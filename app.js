@@ -10,44 +10,55 @@ const allPlayers = {
 	json: true
 };
 
-var prefix = "http://data.nba.net/10s";
+// the name of the player (Ben Simmons by default)
+var first;
+var last;
 
-var today;   // Today's date (NBA Format)
-var benId;   // Ben Simmons' ID
-var teamId;  // Ben Simmons' team ID (Hopefully 76ers!)
-var teamTri; // Ben Simmons' team tricode
+var playerId;    // Player's ID
+var teamId;      // Player's team ID
+var teamTri;     // Player's team tricode
+var today;       // Today's date (NBA Format)
+var teamHasGame; // Does the player have a game today?
 
-// fetch today's date
-rp({uri: prefix + "/prod/v2/today.json", json: true})
-	.then(function(json) {
-		today = json.links.currentDate;
-		console.log(`Today's date (YYYYMMDD): ${today}`);
-	});
+var td = false; // Triple Double?
 
 //==============================================================================
 
-init();
+init(first, last);
+
 
 //==============================================================================
-// fetch json file for all players, and grab Ben Simmons's ID and his teamId
-function init() {
-  rp(allPlayers)
+// fetch json file for all players, and grab player's ID and his teamId
+async function init(first="Ben", last="Simmons") {
+  // Fetch today's date to find games
+  nba.fetchDate()
+    .then(date => { 
+      today = date; 
+      return today;
+    })
+    .then(today => console.log(`Today's date (YYYYMMDD): ${today}`));
+  
+  // fetch all players, get info about one player and populate variables
+  await rp(allPlayers)
 		.then(async players => {
-			let ben  = nba.grabPlayer(players, "Ben", "Simmons");
-			if (ben) {
-				benId  =  ben.personId;
-				teamId =  ben.teamId;
-				teamTri = await nba.getTricode(teamId);
+			let player = nba.grabPlayer(players, first, last);
+			if (player) {
+				playerId = player.personId;
+				teamId   = player.teamId;
+				teamTri  = await nba.getTricode(teamId);
 				
-				console.log(`Ben Simmons successfully found`);
-				console.log(`Ben Simmons Player ID:   ${benId}`);
-				console.log(`Ben Simmons Team ID:     ${teamId} (${teamTri})`);
+				console.log(`${first} ${last} successfully found`);
+				console.log(`${first} ${last} Player ID:   ${playerId}`);
+				console.log(`${first} ${last} Team ID:     ${teamId} (${teamTri})`);
 			} else {
-				console.log("Ben Simmons not found!");
+				console.log(`${first} ${last} not found!`);
 			}
 		})
-		
 		.catch(function(err) {
 			console.log(`Could not complete fetch: ${err}`);
 		});
+		
+	teamHasGame = await nba.teamHasGame(teamId, today);
+		
+	return;
 }

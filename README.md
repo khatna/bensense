@@ -1,2 +1,3 @@
-# bensense (not ocmpleted yet)
-Notifies user (me) via SMS whenever Ben Simmons of the Philadelphia 76ers complete a triple double.
+# bensense (not completed yet)
+Notifies user via SMS when an NBA player completes a triple double. 
+The player is Ben Simmons of the Philadelphia 76ers by default.
