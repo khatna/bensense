@@ -49,10 +49,10 @@ nba.getTricode = async (id) => {
 // fetches date according to NBA date string format from NBA data
 nba.fetchDate = () => {
   return rp({uri: prefix + "/v2/today.json", json: true})
-  	.then(json => json.links.currentDate)
-  	.catch(err => {
-  	  console.log(`Could not fetch date: ${err}`);
-  	});
+  .then(json => json.links.currentDate)
+  .catch(err => {
+    console.log(`Could not fetch date: ${err}`);
+  });
 };
 
 module.exports = nba;
