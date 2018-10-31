@@ -8,8 +8,12 @@ let stats = {};
 // prefix for all NBA box score json files
 const prefix = `https://data.nba.com/data/10s/v2015/json/mobile_teams/nba/2018/scores/gamedetail/`;
 
+stats.getStatline = (first, last, gameId) => {
+	
+} 
+
 // Test function 
-const test => (firstName, lastName, gameId) {
+const test = (firstName, lastName, gameId) => {
 	rp({ uri:`${prefix}${gameId}_gamedetail.json`, json:true })
 	.then(json => {
 		for (let player of json.g.vls.pstsg) {
@@ -22,7 +26,7 @@ const test => (firstName, lastName, gameId) {
 	});
 };
 
-// UNIT TESTING
-test("Stephen", "Curry", "0021800083");
+// uncomment for test
+// test("Stephen", "Curry", "0021800083");
 
 module.exports = stats;

@@ -16,9 +16,8 @@ const first = process.argv[2];
 const last  = process.argv[3];
 
 let player;   // Player object
-let teamId;   // Player's team ID
 let today;    // Today's date (NBA Format)
-let nextGame; // Does the player have a game today?
+let nextGame; // Player's next game
 
 //==============================================================================
 
@@ -33,6 +32,8 @@ init(first, last).then(() => {
 //==============================================================================
 // fetch json file for all players, and grab player's ID and his teamId
 async function init(first, last) {
+	let teamId; // Player's team ID
+	
   // Fetch today's date to find games
   nba.fetchDate()
   .then(date => { 
@@ -45,8 +46,9 @@ async function init(first, last) {
   await rp(allPlayers)
 		.then(async players => {
 			player = nba.grabPlayer(players, first, last);
+			
 			if (player) {
-				teamId   = player.teamId;
+				teamId = player.teamId;
 				let teamTri  = await nba.getTricode(teamId);
 				
 			  console.log(`${first} ${last} successfully found`);
@@ -54,6 +56,7 @@ async function init(first, last) {
 			} else {
 				console.log(`${first} ${last} not found!\n`);
 			}
+			
 		})
 		.catch(function(err) {
 			console.log(`Could not complete fetch: ${err}\n`);
