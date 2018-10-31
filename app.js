@@ -22,7 +22,7 @@ let nextGame; // Player's next game
 //==============================================================================
 
 init(first, last).then(() => {
-	if (true) {
+	if (today === nextGame.startDateEastern) {
 		stats.printStatline(first, last, nextGame.gameId);
 	} else {
 		console.log(`${first} ${last} doesn't have a game today!`);
