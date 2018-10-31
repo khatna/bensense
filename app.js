@@ -2,63 +2,67 @@
 Khatna Bold
 Real Time Triple Double Information
 */
-const rp  = require("request-promise");
-const nba = require("./src");
+const rp    = require("request-promise");
+const nba   = require("./src/nba");
+const stats = require("./src/stats");
 
 const allPlayers = { 
 	uri: "http://data.nba.net/10s/prod/v1/2018/players.json",
 	json: true
 };
 
-// the name of the player (Ben Simmons by default)
-var first;
-var last;
+// the name of the player, from the command line
+const first = process.argv[2];
+const last  = process.argv[3];
 
-var playerId;    // Player's ID
-var teamId;      // Player's team ID
-var teamTri;     // Player's team tricode
-var today;       // Today's date (NBA Format)
-var teamHasGame; // Does the player have a game today?
-
-var td = false; // Triple Double?
+let player;   // Player object
+let teamId;   // Player's team ID
+let today;    // Today's date (NBA Format)
+let nextGame; // Does the player have a game today?
 
 //==============================================================================
 
-init(first, last);
-
+init(first, last).then(() => {
+	if (today === nextGame.startDateEastern) {
+		// set interval for triple double check
+	} else {
+		console.log(`${first} ${last} doesn't have a game today!`);
+	}
+});
 
 //==============================================================================
 // fetch json file for all players, and grab player's ID and his teamId
-async function init(first="Ben", last="Simmons") {
+async function init(first, last) {
   // Fetch today's date to find games
   nba.fetchDate()
-    .then(date => { 
-      today = date; 
-      return today;
-    })
-    .then(today => console.log(`Today's date (YYYYMMDD): ${today}`));
+  .then(date => { 
+    today = date; 
+    return today;
+  })
+  .then(today => console.log(`Today's date (YYYYMMDD): ${today}\n`));
   
   // fetch all players, get info about one player and populate variables
   await rp(allPlayers)
 		.then(async players => {
-			let player = nba.grabPlayer(players, first, last);
+			player = nba.grabPlayer(players, first, last);
 			if (player) {
-				playerId = player.personId;
 				teamId   = player.teamId;
-				teamTri  = await nba.getTricode(teamId);
+				let teamTri  = await nba.getTricode(teamId);
 				
-				console.log(`${first} ${last} successfully found`);
-				console.log(`${first} ${last} Player ID:   ${playerId}`);
-				console.log(`${first} ${last} Team ID:     ${teamId} (${teamTri})`);
+			  console.log(`${first} ${last} successfully found`);
+				console.log(`${first} ${last} Team: ${teamTri}`);
 			} else {
-				console.log(`${first} ${last} not found!`);
+				console.log(`${first} ${last} not found!\n`);
 			}
 		})
 		.catch(function(err) {
-			console.log(`Could not complete fetch: ${err}`);
+			console.log(`Could not complete fetch: ${err}\n`);
 		});
 		
-	teamHasGame = await nba.teamHasGame(teamId, today);
-		
-	return;
+	// if player exists, check if his team has a game tonight
+	if (player) {
+	  nextGame = await nba.nextGame(teamId);
+	  let date = nextGame.startDateEastern;
+  	console.log(`${first} ${last} has his next game on: ${date}\n`);
+	}
 }
