@@ -45,11 +45,11 @@ async function init(first, last) {
 	
   // Fetch today's date to find games
   nba.fetchDate()
-  .then(date => { 
-    today = date; 
-    return today;
-  })
-  .then(today => console.log(`Today's date (YYYYMMDD): ${today}\n`));
+  	.then(date => { 
+			today = date; 
+			return today;
+	})
+  	.then(today => console.log(`Today's date (YYYYMMDD): ${today}\n`));
   
   // fetch all players, get info about one player and populate variables
   await rp(allPlayers)
@@ -73,11 +73,11 @@ async function init(first, last) {
 		
 	// if player exists, fetch his next game
 	if (player) {
-	  nextGame = await nba.nextGame(teamId);
-	  let date        = nextGame.startDateEastern;
-	  let opponentId  = nba.getOpponent(teamId, nextGame);
-	  let opponent    = await nba.getTricode(opponentId); 
+		nextGame = await nba.nextGame(teamId);
+		let date        = nextGame.startDateEastern;
+		let opponentId  = nba.getOpponent(teamId, nextGame);
+		let opponent    = await nba.getTricode(opponentId); 
 	  
-  	console.log(`${first} ${last}'s next game is on ${date} against ${opponent}\n`);
+		console.log(`${first} ${last}'s next game is on ${date} against ${opponent}\n`);
 	}
 }

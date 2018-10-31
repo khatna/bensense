@@ -15,12 +15,13 @@ nba.grabPlayer = (players, first, last) => {
 
 // if the players team has a game on date, returns the game objcet. False otherwise
 nba.nextGame = (teamId) => {
-  return rp({uri: `${prefix}/v1/2018/teams/${teamId}/schedule.json`, json:true})
-    .then(json => {
-      var i = json.league.lastStandardGamePlayedIndex;
-      return json.league.standard[i+1];
-    })
-  .catch(err => console.log(err));
+	return rp({uri: `${prefix}/v1/2018/teams/${teamId}/schedule.json`, json:true})
+		.then(json => {
+			var i = json.league.lastStandardGamePlayedIndex;
+			return json.league.standard[i+1];
+			
+		})
+		.catch(err => console.log(err));
 };
 
 // returns the id of the opponent team given a game and a team
@@ -42,17 +43,17 @@ nba.getTricode = (id) => {
 			for (let team of teams.league.standard) {
 				if (team.teamId === id)
 					return team.tricode;
-      }  
+			}  
 		});
 };
 
 // fetches date according to NBA date string format from NBA data
 nba.fetchDate = () => {
-  return rp({uri: prefix + "/v2/today.json", json: true})
-  .then(json => json.links.currentDate)
-  .catch(err => {
-    console.log(`Could not fetch date: ${err}`);
-  });
+	return rp({uri: prefix + "/v2/today.json", json: true})
+		.then(json => json.links.currentDate)
+		.catch(err => {
+			console.log(`Could not fetch date: ${err}`);
+		});
 };
 
 module.exports = nba;
