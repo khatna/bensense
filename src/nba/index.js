@@ -23,6 +23,18 @@ nba.nextGame = async (teamId) => {
   .catch(err => console.log(err));
 };
 
+// returns the id of the opponent team given a game and a team
+nba.getOpponent = (teamId, game) => {
+	if (teamId === game.vTeam.teamId) {
+		return game.hTeam.teamId;
+	} else if (teamId === game.hTeam.teamId) {
+		return game.vTeam.teamId;
+	}
+	else {
+		console.log(`Team ${teamId} isn't in the game!`);
+	}
+};
+
 // get the tricode (e.g. PHI) for given team id
 nba.getTricode = async (id) => {
 	return rp({uri: `${prefix}/v2/2018/teams.json`, json: true})

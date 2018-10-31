@@ -22,7 +22,7 @@ let nextGame; // Player's next game
 //==============================================================================
 
 init(first, last).then(() => {
-	if (today === nextGame.startDateEastern) {
+	if (nextGame && today === nextGame.startDateEastern) {
 		stats.printStatline(first, last, nextGame.gameId);
 	} else {
 		console.log(`${first} ${last} doesn't have a game today!`);
@@ -48,7 +48,7 @@ async function init(first, last) {
 			player = nba.grabPlayer(players, first, last);
 			
 			if (player) {
-				teamId = player.teamId;
+				teamId       = player.teamId;
 				let teamTri  = await nba.getTricode(teamId);
 				
 			  console.log(`${first} ${last} successfully found`);
@@ -62,10 +62,13 @@ async function init(first, last) {
 			console.log(`Could not complete fetch: ${err}\n`);
 		});
 		
-	// if player exists, check if his team has a game tonight
+	// if player exists, fetch his next game
 	if (player) {
 	  nextGame = await nba.nextGame(teamId);
-	  let date = nextGame.startDateEastern;
-  	console.log(`${first} ${last} has his next game on: ${date}\n`);
+	  let date            = nextGame.startDateEastern;
+	  let opponentId      = nba.getOpponent(teamId, nextGame);
+	  let opponent        = await nba.getTricode(opponentId); 
+	  
+  	console.log(`${first} ${last}'s next game is on ${date} against ${opponent}`);
 	}
 }
