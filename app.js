@@ -21,9 +21,18 @@ let nextGame; // Player's next game
 
 //==============================================================================
 
-init(first, last).then(() => {
-	if (nextGame && today === nextGame.startDateEastern) {
-		stats.printStatline(first, last, nextGame.gameId);
+init(first, last)
+	.then(() => {
+	if (nextGame && nextGame.startDateEastern === today) {
+		var checking = setInterval(() => {
+			
+			if (stats.hasTripleDouble(first, last, nextGame)) {
+				stats.printStatline(first, last, nextGame);
+				clearInterval(checking);
+			}
+
+		}, 5000);
+	
 	} else {
 		console.log(`${first} ${last} doesn't have a game today!`);
 	}
@@ -65,10 +74,10 @@ async function init(first, last) {
 	// if player exists, fetch his next game
 	if (player) {
 	  nextGame = await nba.nextGame(teamId);
-	  let date            = nextGame.startDateEastern;
-	  let opponentId      = nba.getOpponent(teamId, nextGame);
-	  let opponent        = await nba.getTricode(opponentId); 
+	  let date        = nextGame.startDateEastern;
+	  let opponentId  = nba.getOpponent(teamId, nextGame);
+	  let opponent    = await nba.getTricode(opponentId); 
 	  
-  	console.log(`${first} ${last}'s next game is on ${date} against ${opponent}`);
+  	console.log(`${first} ${last}'s next game is on ${date} against ${opponent}\n`);
 	}
 }

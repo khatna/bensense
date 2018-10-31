@@ -14,7 +14,7 @@ nba.grabPlayer = (players, first, last) => {
 };
 
 // if the players team has a game on date, returns the game objcet. False otherwise
-nba.nextGame = async (teamId) => {
+nba.nextGame = (teamId) => {
   return rp({uri: `${prefix}/v1/2018/teams/${teamId}/schedule.json`, json:true})
     .then(json => {
       var i = json.league.lastStandardGamePlayedIndex;
@@ -36,7 +36,7 @@ nba.getOpponent = (teamId, game) => {
 };
 
 // get the tricode (e.g. PHI) for given team id
-nba.getTricode = async (id) => {
+nba.getTricode = (id) => {
 	return rp({uri: `${prefix}/v2/2018/teams.json`, json: true})
 		.then(teams => {
 			for (let team of teams.league.standard) {

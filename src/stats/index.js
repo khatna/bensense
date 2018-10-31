@@ -8,7 +8,8 @@ let stats = {};
 // prefix for all NBA box score json files
 const prefix = `https://data.nba.com/data/10s/v2015/json/mobile_teams/nba/2018/scores/gamedetail/`;
 
-stats.getStatline = (firstName, lastName, gameId) => {
+stats.getStatline = (firstName, lastName, game) => {
+	const gameId = game.gameId;
 	return rp({ uri:`${prefix}${gameId}_gamedetail.json`, json:true })
 	.then(json => {
 		if (!json.g.hls.pstsg) {
@@ -35,14 +36,14 @@ stats.getStatline = (firstName, lastName, gameId) => {
 			return;
 		} else {
 			let {pts, ast, reb, stl, blk} = foundPlayer;
-			return [Number(pts), Number(ast), Number(reb), Number(stl), Number(blk)];
+			return [pts, ast, reb, stl, blk];
 		}
 	});
 }; 
 
 // prints players's statline to the console
-stats.printStatline = async (first, last, gameId) => {
-	const statLine = await stats.getStatline(first, last, gameId);
+stats.printStatline = async (first, last, game) => {
+	const statLine = await stats.getStatline(first, last, game);
 	if (statLine) {
 		console.log(`${first} ${last} statline:
 		
@@ -54,23 +55,24 @@ stats.printStatline = async (first, last, gameId) => {
 	}
 };
 
-// Determine if player is home or visitor
-
-// Test function 
-const test = (firstName, lastName, gameId) => {
-	rp({ uri:`${prefix}${gameId}_gamedetail.json`, json:true })
-	.then(json => {
-		for (let player of json.g.vls.pstsg) {
-			if (player.fn === firstName && player.ln === lastName) {
-				console.log(`${lastName} points:   ${player.pts}`);
-				console.log(`${lastName} assists:  ${player.ast}`);
-				console.log(`${lastName} rebounds: ${player.reb}`);
-			}
+// check if player has triple double, and log stats if he does
+stats.hasTripleDouble = async (first, last, game) => {
+	const statLine = await stats.getStatline(first, last, game);
+	if (statLine) {
+		let overTen = 0;
+		
+		for (let i = 0; i < 5; i++) {
+			if (Number(statLine[i]) >= 10) overTen++;
+			if (overTen >= 3)              break;
 		}
-	});
+		
+		if (overTen >= 3) {
+			console.log(`${first} ${last} has achieved a triple double!`);
+			return true;
+		} else {
+			return false;
+		}
+	}
 };
-
-// uncomment for test
-// test("Stephen", "Curry", "0021800083");
 
 module.exports = stats;
