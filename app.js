@@ -36,6 +36,11 @@ init(first, last).then(() => {
 				stats.printStatline(first, last, nextGame);
 			}
 			
+			if (await stats.gameIsOver(nextGame)) {
+				console.log("Game ended.");
+				stats.printStatline(first, last, nextGame);
+			}
+			
 			ticks += 1;
 		}, 6000);
 

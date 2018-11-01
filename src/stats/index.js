@@ -8,7 +8,7 @@ let stats = {};
 // prefix for all NBA box score json files
 const prefix = `https://data.nba.com/data/10s/v2015/json/mobile_teams/nba/2018/scores/gamedetail/`;
 
-stats.getStatline = async (firstName, lastName, game) => {
+stats.getStatline = (firstName, lastName, game) => {
 	const gameId = game.gameId;
 	return rp({ uri:`${prefix}${gameId}_gamedetail.json`, json:true })
 	.then(json => {
@@ -78,6 +78,14 @@ stats.hasTripleDouble = async (first, last, game) => {
 		console.log("Statline not found");
 		return false;
 	}
+};
+
+stats.gameIsOver = (game) => {
+	const gameId = game.gameId;
+	return rp({ uri:`${prefix}${gameId}_gamedetail.json`, json:true })
+	.then(json => {
+		return json.g.stt === "Final";
+	});
 };
 
 module.exports = stats;
