@@ -21,22 +21,29 @@ let nextGame; // Player's next game
 
 //==============================================================================
 
-init(first, last)
-	.then(() => {
+init(first, last).then(() => {
 	if (nextGame && nextGame.startDateEastern === today) {
-		var checking = setInterval(() => {
+		let ticks = 0;
+		var checking = setInterval(async () => {
 			
-			if (stats.hasTripleDouble(first, last, nextGame)) {
+			if (await stats.hasTripleDouble(first, last, nextGame)) {
 				stats.printStatline(first, last, nextGame);
 				clearInterval(checking);
+			} 
+				
+			else if (ticks % 10 === 0) {
+				console.log("No triple double yet");
+				stats.printStatline(first, last, nextGame);
 			}
+			
+			ticks += 1;
+		}, 6000);
 
-		}, 5000);
-	
 	} else {
 		console.log(`${first} ${last} doesn't have a game today!`);
 	}
 });
+
 
 //==============================================================================
 // fetch json file for all players, and grab player's ID and his teamId

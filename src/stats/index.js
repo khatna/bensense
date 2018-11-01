@@ -8,7 +8,7 @@ let stats = {};
 // prefix for all NBA box score json files
 const prefix = `https://data.nba.com/data/10s/v2015/json/mobile_teams/nba/2018/scores/gamedetail/`;
 
-stats.getStatline = (firstName, lastName, game) => {
+stats.getStatline = async (firstName, lastName, game) => {
 	const gameId = game.gameId;
 	return rp({ uri:`${prefix}${gameId}_gamedetail.json`, json:true })
 	.then(json => {
@@ -51,7 +51,7 @@ stats.printStatline = async (first, last, game) => {
 		Assists:    ${statLine[1]}
 		Rebounds:   ${statLine[2]}
 		Steals:     ${statLine[3]}
-		Blocks:     ${statLine[4]}`);
+		Blocks:     ${statLine[4]}\n`);
 	}
 };
 
@@ -72,6 +72,11 @@ stats.hasTripleDouble = async (first, last, game) => {
 		} else {
 			return false;
 		}
+	
+		
+	} else {
+		console.log("Statline not found");
+		return false;
 	}
 };
 
