@@ -32,11 +32,13 @@ init(first, last).then(() => {
 			} 
 				
 			else if (ticks % 10 === 0) {
+				console.clear();
 				console.log("No triple double yet");
 				stats.printStatline(first, last, nextGame);
 			}
 			
 			if (await stats.gameIsOver(nextGame)) {
+				console.clear();
 				console.log("Game ended.");
 				stats.printStatline(first, last, nextGame);
 			}
