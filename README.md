@@ -37,7 +37,7 @@ Ben Simmons has achieved a triple double!
 Ben Simmons statline:
 
                 Points:     14
-                Assists:    11
+                Assists:    10
                 Rebounds:   13
                 Steals:     1
                 Blocks:     0
