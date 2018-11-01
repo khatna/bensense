@@ -41,6 +41,7 @@ init(first, last).then(() => {
 				console.clear();
 				console.log("Game ended.");
 				stats.printStatline(first, last, nextGame);
+				clearInterval(checking);
 			}
 			
 			ticks += 1;
