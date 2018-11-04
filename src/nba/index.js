@@ -5,10 +5,14 @@ const prefix = "http://data.nba.net/10s/prod";
 // the object to be exported. only contains functions
 var nba = {};
 
-// grabs player object if found from first and last names
+// grabs player object if found from first and last names (case insensitive)
 nba.grabPlayer = (players, first, last) => {
+	const firstLower = first.toLowerCase();
+	const lastLower   = last.toLowerCase();
 	for (let player of players.league.standard) {
-		if (player.firstName === first && player.lastName === last)
+		let fNameLower = player.firstName.toLowerCase();
+		let lNameLower = player.lastName.toLowerCase();
+		if (fNameLower === firstLower && lNameLower === lastLower)
 			return player;
 	}
 };

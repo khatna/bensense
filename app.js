@@ -72,6 +72,10 @@ async function init(first, last) {
 			player = nba.grabPlayer(players, first, last);
 			
 			if (player) {
+				// capitalizing name properly (e.g. Lebron => LeBron)
+				first        = player.firstName;
+				last         = player.lastName;
+				
 				teamId       = player.teamId;
 				let teamTri  = await nba.getTricode(teamId);
 				
