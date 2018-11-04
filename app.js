@@ -12,8 +12,8 @@ const allPlayers = {
 };
 
 // the name of the player, from the command line
-const first = process.argv[2];
-const last  = process.argv[3];
+let first = process.argv[2];
+let last  = process.argv[3];
 
 let player;   // Player object
 let today;    // Today's date (NBA Format)
@@ -23,9 +23,13 @@ let nextGame; // Player's next game
 
 init(first, last).then(() => {
 	if (nextGame && nextGame.startDateEastern === today) {
+		// capitalizing name properly (e.g. Lebron => LeBron)
+		first = player.firstName;
+		last  = player.lastName;
+		
 		let ticks = 0;
+		
 		var checking = setInterval(async () => {
-			
 			if (await stats.hasTripleDouble(first, last, nextGame)) {
 				stats.printStatline(first, last, nextGame);
 				clearInterval(checking);
@@ -72,10 +76,6 @@ async function init(first, last) {
 			player = nba.grabPlayer(players, first, last);
 			
 			if (player) {
-				// capitalizing name properly (e.g. Lebron => LeBron)
-				first        = player.firstName;
-				last         = player.lastName;
-				
 				teamId       = player.teamId;
 				let teamTri  = await nba.getTricode(teamId);
 				
