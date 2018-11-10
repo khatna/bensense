@@ -2,101 +2,63 @@
 Khatna Bold
 Real Time Triple Double Information
 */
-const rp    = require("request-promise");
-const nba   = require("./src/nba");
-const stats = require("./src/stats");
 
-const allPlayers = { 
-	uri: "http://data.nba.net/10s/prod/v1/2018/players.json",
-	json: true
-};
+const stats = require("./src/stats");
+const main  = require("./src/main");
 
 // the name of the player, from the command line
 let first = process.argv[2];
 let last  = process.argv[3];
 
-let player;   // Player object
-let today;    // Today's date (NBA Format)
-let nextGame; // Player's next game
-
 //==============================================================================
 
-init(first, last).then(() => {
-	if (nextGame && nextGame.startDateEastern === today) {
-		// capitalizing name properly (e.g. Lebron => LeBron)
+main.init(first, last)
+.then((player) => {
+	// player was found and has a game today
+	if (player && player.hasGameToday) {
+		
+		// use correct spelling (e.g. Lebron => LeBron)
 		first = player.firstName;
 		last  = player.lastName;
 		
-		let ticks = 0;
-		
 		var checking = setInterval(async () => {
-			if (await stats.hasTripleDouble(first, last, nextGame)) {
-				stats.printStatline(first, last, nextGame);
+			let statLine = await stats.getStatline(first, last, player.nextGame);
+			
+			if (!statLine) clearInterval(checking);
+			
+			// triple double completed!
+			if (stats.hasTripleDouble(statLine)) {
+				console.log(`${first} ${last} has completed a triple double!`);
 				clearInterval(checking);
-			} 
-				
-			else if (ticks % 10 === 0) {
+			}
+			
+			// currently in-game, but hasn't completed a triple double yet
+			else if (statLine) {
 				console.clear();
 				console.log("No triple double yet");
-				stats.printStatline(first, last, nextGame);
 			}
 			
-			if (await stats.gameIsOver(nextGame)) {
+			// game ended before the player completes a triple double
+			else if (await stats.gameIsOver(player.nextGame)) {
 				console.clear();
 				console.log("Game ended.");
-				stats.printStatline(first, last, nextGame);
 				clearInterval(checking);
 			}
 			
-			ticks += 1;
-		}, 6000);
+			stats.printStatline(first, last, statLine);
+		}, 5000);
 
-	} else {
+	} 
+	
+	// player found but doesn't have a game
+	else if (player) {
 		console.log(`${first} ${last} doesn't have a game today!`);
+	}
+	
+	// player wasn't found
+	else {
+		console.log(`${first} ${last} not found!\n`);
 	}
 });
 
 
-//==============================================================================
-// fetch json file for all players, and grab player's ID and his teamId
-async function init(first, last) {
-	let teamId; // Player's team ID
-	
-  // Fetch today's date to find games
-  nba.fetchDate()
-  	.then(date => { 
-			today = date; 
-			return today;
-	})
-  	.then(today => console.log(`Today's date (YYYYMMDD): ${today}\n`));
-  
-  // fetch all players, get info about one player and populate variables
-  await rp(allPlayers)
-		.then(async players => {
-			player = nba.grabPlayer(players, first, last);
-			
-			if (player) {
-				teamId       = player.teamId;
-				let teamTri  = await nba.getTricode(teamId);
-				
-			  console.log(`${first} ${last} successfully found`);
-				console.log(`${first} ${last} Team: ${teamTri}`);
-			} else {
-				console.log(`${first} ${last} not found!\n`);
-			}
-			
-		})
-		.catch(function(err) {
-			console.log(`Could not complete fetch: ${err}\n`);
-		});
-		
-	// if player exists, fetch his next game
-	if (player) {
-		nextGame = await nba.nextGame(teamId);
-		let date        = nextGame.startDateEastern;
-		let opponentId  = nba.getOpponent(teamId, nextGame);
-		let opponent    = await nba.getTricode(opponentId); 
-	  
-		console.log(`${first} ${last}'s next game is on ${date} against ${opponent}\n`);
-	}
-}

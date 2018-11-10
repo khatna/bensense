@@ -14,7 +14,7 @@ stats.getStatline = (firstName, lastName, game) => {
 	.then(json => {
 		if (!json.g.hls.pstsg) {
 			console.log("The game hasn't started yet!");
-			return;
+			return null;
 		}
 		
 		// combine home and visitor players into one array
@@ -31,22 +31,21 @@ stats.getStatline = (firstName, lastName, game) => {
 			}
 		}
 		
-		if (!found) {
-			console.log(`Player ${firstName} ${lastName} isn't active`);
-			return;
-		} else {
+		if (found) {
 			let {pts, ast, reb, stl, blk} = foundPlayer;
 			return [pts, ast, reb, stl, blk];
+		} else {
+			console.log(`${firstName} ${lastName} isn't active`);
+			return null;
 		}
 	});
 }; 
 
 // prints players's statline to the console
-stats.printStatline = async (first, last, game) => {
-	const statLine = await stats.getStatline(first, last, game);
+stats.printStatline = async (first, last, statLine) => {
 	if (statLine) {
 		console.log(`${first} ${last} statline:
-		
+
 		Points:     ${statLine[0]}
 		Assists:    ${statLine[1]}
 		Rebounds:   ${statLine[2]}
@@ -56,8 +55,7 @@ stats.printStatline = async (first, last, game) => {
 };
 
 // check if player has triple double, and log stats if he does
-stats.hasTripleDouble = async (first, last, game) => {
-	const statLine = await stats.getStatline(first, last, game);
+stats.hasTripleDouble = (statLine) => {
 	if (statLine) {
 		let overTen = 0;
 		
@@ -66,17 +64,7 @@ stats.hasTripleDouble = async (first, last, game) => {
 			if (overTen >= 3)              break;
 		}
 		
-		if (overTen >= 3) {
-			console.log(`${first} ${last} has achieved a triple double!`);
-			return true;
-		} else {
-			return false;
-		}
-	
-		
-	} else {
-		console.log("Statline not found");
-		return false;
+		return overTen >= 3;
 	}
 };
 
