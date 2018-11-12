@@ -5,7 +5,9 @@ This is a simple node script that notifies the user when a player of their choic
 <sub>*A triple double is when a player has logged 10 or more in 3 of the 5 major statistical categories (points, assists, rebounds, steals and blocks).</sub>
 
 ## Usage
-Run `node app.js [player's first name] [player's last name]` from the directory containing the files. (the name inputs are case insensitive)  
+Run `npm install` to install the necessary packages, namely request and request-promise. 
+
+Run `node app.js [player's first name] [player's last name]` (the name inputs are case insensitive)  
 
 Today's date, whether the player was successfully found, the player's team, and the details their next game will be logged to the console. For example:
 
