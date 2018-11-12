@@ -16,13 +16,13 @@ stats.getStatline = (firstName, lastName, game) => {
 			console.log("The game hasn't started yet!");
 			return null;
 		}
-		
+
 		// combine home and visitor players into one array
 		const players = json.g.hls.pstsg.concat(json.g.vls.pstsg);
-		
+
 		let found = false;
 		let foundPlayer;
-		
+
 		// finding player
 		for (let player of players) {
 			if (player.fn === firstName && player.ln === lastName) {
@@ -30,7 +30,7 @@ stats.getStatline = (firstName, lastName, game) => {
 				found = true;
 			}
 		}
-		
+
 		if (found) {
 			let {pts, ast, reb, stl, blk} = foundPlayer;
 			return [pts, ast, reb, stl, blk];
@@ -39,33 +39,28 @@ stats.getStatline = (firstName, lastName, game) => {
 			return null;
 		}
 	});
-}; 
+};
 
 // prints players's statline to the console
 stats.printStatline = async (first, last, statLine) => {
-	if (statLine) {
-		console.log(`${first} ${last} statline:
-
-		Points:     ${statLine[0]}
-		Assists:    ${statLine[1]}
-		Rebounds:   ${statLine[2]}
-		Steals:     ${statLine[3]}
-		Blocks:     ${statLine[4]}\n`);
-	}
+	console.log(`${first} ${last} statline:
+	Points:     ${statLine[0]}
+	Assists:    ${statLine[1]}
+	Rebounds:   ${statLine[2]}
+	Steals:     ${statLine[3]}
+	Blocks:     ${statLine[4]}\n`);
 };
 
 // check if player has triple double, and log stats if he does
 stats.hasTripleDouble = (statLine) => {
-	if (statLine) {
-		let overTen = 0;
-		
-		for (let i = 0; i < 5; i++) {
-			if (Number(statLine[i]) >= 10) overTen++;
-			if (overTen >= 3)              break;
-		}
-		
-		return overTen >= 3;
+	let overTen = 0;
+
+	for (let i = 0; i < 5; i++) {
+		if (Number(statLine[i]) >= 10) overTen++;
+		if (overTen >= 3)              break;
 	}
+
+	return overTen >= 3;
 };
 
 stats.gameIsOver = (game) => {
