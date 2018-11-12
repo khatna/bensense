@@ -29,7 +29,7 @@ main.init(first, last)
 				return;
 			}
 
-			console.clear();
+			
 			// triple double completed!
 			if (stats.hasTripleDouble(statLine)) {
 				console.log(`${first} ${last} has completed a triple double!`);
@@ -46,7 +46,8 @@ main.init(first, last)
 				console.log("Game ended.");
 				clearInterval(checking);
 			}
-
+			
+			console.clear();
 			stats.printStatline(first, last, statLine);
 		}, 5000);
 
