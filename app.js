@@ -21,22 +21,20 @@ main.init(first, last)
 		last  = player.lastName;
 
 		var checking = setInterval(async () => {
-
+			console.clear();
 			let statLine = await stats.getStatline(first, last, player.nextGame);
-
+			
 			if (!statLine) {
 				clearInterval(checking);
 				return;
 			}
-
 			
 			// triple double completed!
 			if (stats.hasTripleDouble(statLine)) {
 				console.log(`${first} ${last} has completed a triple double!`);
 				clearInterval(checking);
-			}
-
-			// currently in-game, but hasn't completed a triple double yet
+			} 
+			
 			else if (statLine) {
 				console.log("No triple double yet");
 			}
@@ -47,7 +45,6 @@ main.init(first, last)
 				clearInterval(checking);
 			}
 			
-			console.clear();
 			stats.printStatline(first, last, statLine);
 		}, 5000);
 
