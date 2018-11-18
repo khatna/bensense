@@ -40,7 +40,7 @@ main.init(first, last)
 			}
 
 			// game ended before the player completes a triple double
-			else if (await stats.gameIsOver(player.nextGame)) {
+			if (await stats.gameIsOver(player.nextGame)) {
 				console.log("Game ended.");
 				clearInterval(checking);
 			}
