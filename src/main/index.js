@@ -11,7 +11,7 @@ const allPlayers = {
 let main = {};
 
 // searches json file for all players, and grabs player's ID and his teamId
-main.init = async (first, last) => {
+main.init = async (first="Ben", last="Simmons") => {
 	// the player object corresponding to [fist] [last]
 	let player;
   // today's date, in NBA json format
