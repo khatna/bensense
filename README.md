@@ -22,7 +22,6 @@ Ben Simmons's next game is on 20181101 against LAC
 Then, if the player's next game is currently underway, the script will check if the player has completed a triple double every 6 seconds. If the player hasn't completed the triple double yet, his stats are just logged once a minute:  
 
 ```
-No triple double yet
 Ben Simmons statline:
 
                 Points:     5
@@ -46,6 +45,3 @@ Ben Simmons statline:
 ```  
 
 and the script stops execution
-
-## Future plans
-In the future, I will modify the script such that instead logging to the console, the script will send SMS text messages to the user.
