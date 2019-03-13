@@ -3,15 +3,15 @@ Khatna Bold
 Real Time Triple Double Information
 */
 
-const stats = require("./src/stats");
-const main  = require("./src/main");
+const stats   = require("./src/stats");
+const players = require("./src/players");
 
 // the name of the player, from the command line
 let first = process.argv[2];
 let last  = process.argv[3];
 
 //==============================================================================
-main.init(first, last)
+players.find(first, last)
 .then((player) => {
 	// player was found and has a game today
 	if (player && player.hasGameToday) {
@@ -20,23 +20,19 @@ main.init(first, last)
 		first = player.firstName;
 		last  = player.lastName;
 
+		let oldStatline, statline;
 		var checking = setInterval(async () => {
-			console.clear();
-			let statLine = await stats.getStatline(first, last, player.nextGame);
-			
-			if (!statLine) {
+			statline = await stats.getStatline(first, last, player.nextGame);
+
+			if (!statline) {
 				clearInterval(checking);
 				return;
 			}
 			
 			// triple double completed!
-			if (stats.hasTripleDouble(statLine)) {
+			if (stats.hasTripleDouble(statline)) {
 				console.log(`${first} ${last} has completed a triple double!`);
 				clearInterval(checking);
-			} 
-			
-			else if (statLine) {
-				console.log("No triple double yet");
 			}
 
 			// game ended before the player completes a triple double
@@ -45,7 +41,13 @@ main.init(first, last)
 				clearInterval(checking);
 			}
 			
-			stats.printStatline(first, last, statLine);
+			// print stats if they change
+			if (JSON.stringify(statline) !== JSON.stringify(oldStatline)) {
+				console.clear();
+				stats.printStatline(first, last, statline);
+				oldStatline = statline;
+			}
+
 		}, 5000);
 
 	}
