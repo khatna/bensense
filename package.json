@@ -1,7 +1,7 @@
 {
   "name": "bensense",
   "version": "1.0.0",
-  "description": "Notifies user via SMS whenever Ben Simmons achieves a triple double. (Plans to extend to any player)",
+  "description": "Live CLI NBA stat checking",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
