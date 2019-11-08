@@ -1,12 +1,12 @@
 /* the stats module - for parsing box score stats and determining if player has
    triple double etc. */
 const rp = require("request-promise");
-
+const year = new Date().getFullYear();
 // the object to be exported
 let stats = {};
 
 // prefix for all NBA box score json files
-const prefix = `https://data.nba.com/data/10s/v2015/json/mobile_teams/nba/2018/scores/gamedetail/`;
+const prefix = `https://data.nba.com/data/10s/v2015/json/mobile_teams/nba/${year}/scores/gamedetail/`;
 
 stats.getStatline = (firstName, lastName, game) => {
 	const gameId = game.gameId;
