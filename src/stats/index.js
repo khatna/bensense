@@ -1,7 +1,7 @@
 /* the stats module - for parsing box score stats and determining if player has
    triple double etc. */
 const rp = require("request-promise");
-const year = new Date().getFullYear();
+const year = require('../yearsvc');
 // the object to be exported
 let stats = {};
 

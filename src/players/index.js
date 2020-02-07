@@ -1,6 +1,6 @@
 const nba = require("../nba");
 const rp = require("request-promise");
-const year = new Date().getFullYear();
+const year = require('../yearsvc');
 // json file containing all players
 const allPlayers = {
 	uri: `http://data.nba.net/10s/prod/v1/${year}/players.json`,

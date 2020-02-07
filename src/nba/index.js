@@ -1,7 +1,7 @@
 const rp = require("request-promise");
 
 const prefix = "http://data.nba.net/10s/prod";
-const year = new Date().getFullYear();
+const year = require('../yearsvc');
 
 // the object to be exported. only contains functions
 var nba = {};
